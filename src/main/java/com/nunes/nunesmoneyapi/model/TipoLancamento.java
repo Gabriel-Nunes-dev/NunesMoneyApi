@@ -1,2 +1,9 @@
-package com.nunes.nunesmoneyapi.model;public enum TipoLancamento {
+package com.nunes.nunesmoneyapi.model;
+
+public enum TipoLancamento {
+
+        RECEITA,
+        DESPESA
+
 }
+

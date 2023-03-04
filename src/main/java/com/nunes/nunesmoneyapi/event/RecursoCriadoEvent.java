@@ -1,6 +1,6 @@
+package com.nunes.nunesmoneyapi.event;
 
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.context.ApplicationEvent;
 
 public class RecursoCriadoEvent extends ApplicationEvent {

@@ -1,14 +1,16 @@
 package com.nunes.nunesmoneyapi.controller;
 
+import com.nunes.nunesmoneyapi.event.RecursoCriadoEvent;
 import com.nunes.nunesmoneyapi.model.Categoria;
 import com.nunes.nunesmoneyapi.repository.CategoriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletResponse;
-import java.net.URI;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -18,22 +20,27 @@ public class CategoriaController {
     @Autowired
     private CategoriaRepository categoriaRepository;
 
+    @Autowired
+    ApplicationEventPublisher publisher;
+
+//    Método que lista categorias existentes
     @GetMapping
     public List<Categoria> listar() {
         return categoriaRepository.findAll();
     }
 
+//    Método que insere categorias
     @PostMapping
-    public ResponseEntity<Categoria> criar(@RequestBody Categoria categoria, HttpServletResponse response) {
-        Categoria categoriaSalva = categoriaRepository.save(categoria);
+    public ResponseEntity<Categoria> criar(@Valid @RequestBody Categoria categoria, HttpServletResponse response) {
+    Categoria categoriaSalva = categoriaRepository.save(categoria);
 
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{codigo}")
-                .buildAndExpand(categoriaSalva.getCodigo()).toUri();
-        response.setHeader("Location", uri.toASCIIString());
+    publisher.publishEvent(new RecursoCriadoEvent(this, response, categoriaSalva.getCodigo()));
 
-        return ResponseEntity.created(uri).body(categoriaSalva);
-    }
+    return ResponseEntity.status(HttpStatus.CREATED).body(categoriaSalva);
+}
 
+
+//    Método que busca categoria específica a partir do código
     @GetMapping("/{codigo}")
     public ResponseEntity<Categoria> buscarPeloCodigo(@PathVariable Long codigo) {
         return this.categoriaRepository.findById(codigo).map(categoria -> ResponseEntity.ok(categoria))
