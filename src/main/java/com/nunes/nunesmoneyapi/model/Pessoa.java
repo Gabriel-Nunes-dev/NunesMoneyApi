@@ -1,25 +1,31 @@
 package com.nunes.nunesmoneyapi.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
-@Entity
+
+@EqualsAndHashCode
 @Getter
 @Setter
-@Table(name = "categoria")
-public class Categoria {
+@Entity
+@Table(name = "pessoa")
+public class Pessoa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codigo;
 
     @NotNull
-    @Size(min = 3, max = 20)
     private String nome;
 
+    @Embedded
+    private Endereco endereco;
+
+    @NotNull
+    private boolean ativo;
 
 }
