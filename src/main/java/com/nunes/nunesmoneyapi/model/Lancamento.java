@@ -4,40 +4,45 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-    @Entity
-    @Getter
-    @Setter
-    @Table(name = "lancamento")
-    public class Lancamento {
+@Entity
+@Getter
+@Setter
+@Table(name = "lancamento")
+public class Lancamento {
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long codigo;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long codigo;
 
-        private String descricao;
+    private String descricao;
 
-        @Column(name = "data_vencimento")
-        private LocalDate dataVencimento;
+    @NotNull
+    @Column(name = "data_vencimento")
+    private LocalDate dataVencimento;
 
-        @Column(name = "data_pagamento")
-        private LocalDate dataPagamento;
+    @Column(name = "data_pagamento")
+    private LocalDate dataPagamento;
 
-        private BigDecimal valor;
+    @NotNull
+    private BigDecimal valor;
 
-        private String observacao;
+    private String observacao;
 
-        @Enumerated(EnumType.STRING)
-        private TipoLancamento tipo;
+    @Enumerated(EnumType.STRING)
+    private TipoLancamento tipo;
 
-        @ManyToOne
-        @JoinColumn(name = "codigo_categoria")
-        private Categoria categoria;
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "codigo_categoria")
+    private Categoria categoria;
 
-        @ManyToOne
-        @JoinColumn(name = "codigo_pessoa")
-        private Pessoa pessoa;
-    }
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "codigo_pessoa")
+    private Pessoa pessoa;
+}
 
